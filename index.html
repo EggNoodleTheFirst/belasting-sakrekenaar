@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="af">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belasting Sakrekenaar 2026/2027 | Bereken jou netto salaris ná SARS-belasting</title>
+<meta name="description" content="Bereken vinnig jou maandelikse netto salaris ná SARS-inkomstebelasting vir die 2026/2027 belastingjaar. Gratis Afrikaanse belasting sakrekenaar met die nuutste belastingkerwe, kortings en UIF.">
+<style>
+  :root{
+    --ink:#16233a;        /* deep ink navy */
+    --ink-soft:#3a4a63;
+    --gold:#c08a2d;        /* muted SA gold accent */
+    --gold-soft:#e3c98f;
+    --surface:#faf8f3;     /* warm off-white */
+    --card:#ffffff;
+    --line:#e4ded0;
+    --green:#2f6d4f;
+    --muted:#6b7385;
+    --shadow:0 1px 2px rgba(22,35,58,.06),0 8px 28px rgba(22,35,58,.07);
+    --r:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--surface);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:24px 20px 80px}
+  header.hero{padding:18px 0 8px}
+  .eyebrow{
+    font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);font-weight:700;margin-bottom:10px;
+  }
+  h1{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:clamp(1.7rem,4.5vw,2.5rem);
+    line-height:1.12;font-weight:700;letter-spacing:-.01em;
+    margin-bottom:10px;
+  }
+  .sub{color:var(--ink-soft);font-size:1.02rem;max-width:54ch}
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:var(--r);box-shadow:var(--shadow);
+    padding:24px;margin-top:24px;
+  }
+  .field{margin-bottom:18px}
+  .field:last-child{margin-bottom:0}
+  label{display:block;font-weight:600;font-size:.92rem;margin-bottom:7px}
+  .hint{font-weight:400;color:var(--muted);font-size:.82rem}
+  .input-money{position:relative}
+  .input-money span{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    color:var(--muted);font-weight:600;pointer-events:none;
+  }
+  input[type=number]{
+    width:100%;padding:13px 14px 13px 38px;font-size:1.05rem;
+    border:1.5px solid var(--line);border-radius:10px;background:#fff;
+    color:var(--ink);font-weight:600;transition:border-color .15s;
+  }
+  input[type=number]:focus{outline:none;border-color:var(--gold)}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .row .field{flex:1;min-width:160px}
+  select{
+    width:100%;padding:13px 14px;font-size:1rem;border:1.5px solid var(--line);
+    border-radius:10px;background:#fff;color:var(--ink);font-weight:600;cursor:pointer;
+  }
+  select:focus{outline:none;border-color:var(--gold)}
+  .seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{
+    flex:1;padding:12px;border:none;background:#fff;cursor:pointer;
+    font-size:.95rem;font-weight:600;color:var(--muted);transition:.15s;
+  }
+  .seg button.active{background:var(--ink);color:#fff}
+  .checkrow{display:flex;align-items:center;gap:10px;margin-top:4px}
+  .checkrow input{width:18px;height:18px;accent-color:var(--gold)}
+  .checkrow label{margin:0;font-weight:500}
+
+  /* RESULT */
+  .result{
+    background:linear-gradient(160deg,var(--ink),#1f3252);
+    color:#fff;border-radius:var(--r);padding:26px 24px;margin-top:24px;
+    box-shadow:var(--shadow);
+  }
+  .result .lbl{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-soft);font-weight:700}
+  .bignum{
+    font-family:Georgia,serif;font-size:clamp(2.2rem,7vw,3.1rem);
+    font-weight:700;letter-spacing:-.02em;margin:6px 0 2px;line-height:1;
+  }
+  .perlbl{color:#b9c2d4;font-size:.9rem;margin-bottom:20px}
+  .breakdown{border-top:1px solid rgba(255,255,255,.13);padding-top:16px}
+  .brow{display:flex;justify-content:space-between;padding:7px 0;font-size:.95rem}
+  .brow .v{font-weight:600;font-variant-numeric:tabular-nums}
+  .brow.sub-i{color:#aeb8cc;font-size:.88rem;padding:4px 0 4px 14px}
+  .brow.total{border-top:1px solid rgba(255,255,255,.13);margin-top:8px;padding-top:13px;font-size:1.05rem;font-weight:700}
+
+  /* STACK — signature element */
+  .stack-wrap{margin-top:24px}
+  .stack-title{font-size:.92rem;font-weight:700;margin-bottom:4px}
+  .stack-note{font-size:.84rem;color:var(--muted);margin-bottom:14px;max-width:58ch}
+  .stack{display:flex;height:46px;border-radius:9px;overflow:hidden;border:1px solid var(--line);background:#f0ebdd}
+  .seg-bar{height:100%;transition:width .4s cubic-bezier(.4,0,.2,1);position:relative;min-width:0}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px}
+  .leg{display:flex;align-items:center;gap:7px;font-size:.83rem;color:var(--ink-soft)}
+  .leg .sw{width:13px;height:13px;border-radius:3px;flex:none}
+  .leg b{font-variant-numeric:tabular-nums}
+
+  details.faq{margin-top:14px;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+  details.faq summary{padding:15px 18px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  details.faq summary::-webkit-details-marker{display:none}
+  details.faq summary::after{content:"+";color:var(--gold);font-size:1.3rem;font-weight:700}
+  details.faq[open] summary::after{content:"−"}
+  details.faq .body{padding:0 18px 16px;color:var(--ink-soft);font-size:.94rem}
+  .sectit{font-family:Georgia,serif;font-size:1.4rem;margin:40px 0 6px;font-weight:700}
+  .disclaimer{
+    margin-top:30px;padding:16px 18px;background:#f4eee0;border-left:3px solid var(--gold);
+    border-radius:8px;font-size:.86rem;color:var(--ink-soft);
+  }
+  footer{margin-top:40px;text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7}
+  @media (prefers-reduced-motion:reduce){.seg-bar{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Belastingjaar 2026 / 2027 · Suid-Afrika</div>
+    <h1>Hoeveel hou jy oor ná belasting?</h1>
+    <p class="sub">Tik jou salaris in en sien dadelik jou netto inkomste, jou SARS-belasting, en presies hoe elke belastingkerf op jou inkomste val.</p>
+  </header>
+
+  <div class="card">
+    <div class="field">
+      <label for="salary">Bruto salaris <span class="hint">(voor aftrekkings)</span></label>
+      <div class="seg" style="margin-bottom:12px" id="period-seg">
+        <button data-period="month" class="active" type="button">Per maand</button>
+        <button data-period="year" type="button">Per jaar</button>
+      </div>
+      <div class="input-money">
+        <span>R</span>
+        <input type="number" id="salary" placeholder="35 000" min="0" step="100" inputmode="numeric">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="age">Ouderdom</label>
+        <select id="age">
+          <option value="under65">Jonger as 65</option>
+          <option value="65to74">65 tot 74</option>
+          <option value="75plus">75 en ouer</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="medical">Mediese fonds lede <span class="hint">(jy + afhanklikes)</span></label>
+        <select id="medical">
+          <option value="0">Geen mediese fonds</option>
+          <option value="1">1 (net ek)</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="checkrow">
+        <input type="checkbox" id="uif" checked>
+        <label for="uif">Trek WVF (UIF) af — 1% van salaris, gekap</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="result" id="result" aria-live="polite">
+    <div class="lbl">Jou netto salaris</div>
+    <div class="bignum" id="netMonth">R0</div>
+    <div class="perlbl" id="netYear">R0 per jaar</div>
+
+    <div class="breakdown">
+      <div class="brow"><span>Bruto inkomste</span><span class="v" id="rGross">R0</span></div>
+      <div class="brow"><span>Inkomstebelasting (PAYE)</span><span class="v" id="rTax">−R0</span></div>
+      <div class="brow sub-i"><span>Belasting voor kortings</span><span class="v" id="rTaxPre">R0</span></div>
+      <div class="brow sub-i"><span>Min korting(s)</span><span class="v" id="rRebate">−R0</span></div>
+      <div class="brow sub-i" id="rowMtcWrap"><span>Min mediese krediete</span><span class="v" id="rMtc">−R0</span></div>
+      <div class="brow" id="rowUif"><span>WVF (UIF)</span><span class="v" id="rUif">−R0</span></div>
+      <div class="brow total"><span>Netto in jou sak</span><span class="v" id="rNet">R0</span></div>
+    </div>
+  </div>
+
+  <div class="stack-wrap card">
+    <div class="stack-title">Hoe jou inkomste deur die belastingkerwe val</div>
+    <p class="stack-note">Suid-Afrika gebruik 'n progressiewe stelsel: elke deel van jou inkomste word teen sy eie koers belas — nie jou hele salaris teen die boonste koers nie.</p>
+    <div class="stack" id="stack"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <h2 class="sectit">Veelgevraagde vrae</h2>
+
+  <details class="faq"><summary>Hoe werk progressiewe belasting?</summary>
+    <div class="body">Jou inkomste word in "lae" verdeel. Die eerste deel word teen 18% belas, die volgende deel teen 26%, ensovoorts. Jy betaal nooit die hoogste koers op jou hele salaris nie — net op die deel wat in daardie kerf val. Die staafgrafiek hierbo wys dit visueel.</div>
+  </details>
+  <details class="faq"><summary>Wat is 'n belastingkorting (rebate)?</summary>
+    <div class="body">'n Korting word direk van jou berekende belasting afgetrek. Vir 2026/2027 is die primêre korting R17 820 vir almal onder 65. Dit beteken jy betaal geen belasting op 'n jaarinkomste onder R99 000 nie. Mense van 65+ kry 'n groter korting.</div>
+  </details>
+  <details class="faq"><summary>Wat is WVF (UIF)?</summary>
+    <div class="body">Die Werkloosheidsversekeringsfonds. As werknemer dra jy 1% van jou salaris by, gekap teen 'n maksimum salaris van R17 712 per maand — dus hoogstens R177,12 per maand. Jou werkgewer dra nog 1% by.</div>
+  </details>
+  <details class="faq"><summary>Wat is mediese belastingkrediete?</summary>
+    <div class="body">As jy aan 'n mediese fonds behoort, kry jy 'n vaste maandelikse krediet teen jou belasting: R376 vir jou, R376 vir die eerste afhanklike, en R254 vir elke verdere afhanklike (2026/2027).</div>
+  </details>
+
+  <div class="disclaimer">
+    <strong>Let wel:</strong> Hierdie sakrekenaar gee 'n geskatte aanduiding gebaseer op die SARS-belastingkerwe vir 2026/2027 (1 Maart 2026 – 28 Februarie 2027). Dit hou nie rekening met aftrekkings soos pensioenbydraes, reistoelaes of ander inkomstebronne nie. Vir 'n amptelike berekening, raadpleeg SARS (sars.gov.za) of 'n geregistreerde belastingpraktisyn.
+  </div>
+
+  <footer>
+    Belastingkerwe en kortings: Nasionale Tesourie Begroting 2026 Belastinggids.<br>
+    Laas opgedateer Junie 2026 · Gemaak vir Suid-Afrikaners.
+  </footer>
+</div>
+
+<script>
+(function(){
+  // 2026/2027 brackets: [lower bound, base tax at lower bound, marginal rate above lower bound]
+  const BRACKETS=[
+    {from:0,        base:0,      rate:0.18},
+    {from:245100,   base:44118,  rate:0.26},
+    {from:383100,   base:79998,  rate:0.31},
+    {from:530200,   base:125599, rate:0.36},
+    {from:695800,   base:185215, rate:0.39},
+    {from:887000,   base:259783, rate:0.41},
+    {from:1878600,  base:666339, rate:0.45}
+  ];
+  const UPPER=[245100,383100,530200,695800,887000,1878600,Infinity];
+  const REBATES={under65:17820, '65to74':27585, '75plus':30834}; // primary; +secondary; +tertiary cumulative
+  const UIF_CAP_MONTHLY=17712;
+  const COLORS=['#2f6d4f','#3f8a5f','#c08a2d','#d4a13f','#b5642e','#8a3d2e','#5a2d3a'];
+
+  const $=id=>document.getElementById(id);
+  let period='month';
+
+  function fmt(n){
+    return 'R'+Math.round(n).toLocaleString('af-ZA').replace(/,/g,' ');
+  }
+
+  function annualTax(taxable){
+    if(taxable<=0) return 0;
+    let b=BRACKETS[0];
+    for(let i=BRACKETS.length-1;i>=0;i--){ if(taxable>BRACKETS[i].from){b=BRACKETS[i];break;} }
+    return b.base + (taxable-b.from)*b.rate;
+  }
+
+  function calc(){
+    const raw=parseFloat($('salary').value)||0;
+    const annualGross = period==='month' ? raw*12 : raw;
+    const age=$('age').value;
+    const medMembers=parseInt($('medical').value)||0;
+    const uifOn=$('uif').checked;
+
+    const taxPre=annualTax(annualGross);
+    const rebate=REBATES[age];
+    let taxAfterRebate=Math.max(0,taxPre-rebate);
+
+    // medical tax credits (annual)
+    let mtcMonthly=0;
+    if(medMembers>=1) mtcMonthly+=376;
+    if(medMembers>=2) mtcMonthly+=376;
+    if(medMembers>=3) mtcMonthly+=(medMembers-2)*254;
+    const mtcAnnual=mtcMonthly*12;
+    const taxFinal=Math.max(0,taxAfterRebate-mtcAnnual);
+
+    // UIF (employee 1%, capped on monthly gross)
+    let uifMonthly=0;
+    if(uifOn){
+      const monthlyGross=annualGross/12;
+      uifMonthly=Math.min(monthlyGross,UIF_CAP_MONTHLY)*0.01;
+    }
+    const uifAnnual=uifMonthly*12;
+
+    const netAnnual=annualGross-taxFinal-uifAnnual;
+
+    // render
+    $('netMonth').textContent=fmt(netAnnual/12);
+    $('netYear').textContent=fmt(netAnnual)+' per jaar';
+    $('rGross').textContent=fmt(annualGross);
+    $('rTax').textContent='−'+fmt(taxFinal);
+    $('rTaxPre').textContent=fmt(taxPre);
+    $('rRebate').textContent='−'+fmt(rebate);
+    $('rMtc').textContent='−'+fmt(mtcAnnual);
+    $('rowMtcWrap').style.display = medMembers>0 ? 'flex':'none';
+    $('rUif').textContent='−'+fmt(uifAnnual);
+    $('rowUif').style.display = uifOn ? 'flex':'none';
+    $('rNet').textContent=fmt(netAnnual);
+
+    renderStack(annualGross);
+  }
+
+  function renderStack(gross){
+    const stack=$('stack'), legend=$('legend');
+    stack.innerHTML=''; legend.innerHTML='';
+    if(gross<=0){
+      stack.innerHTML='<div style="margin:auto;color:#9a9686;font-size:.85rem">Tik \'n bedrag in om te sien</div>';
+      return;
+    }
+    const labels=['18%','26%','31%','36%','39%','41%','45%'];
+    for(let i=0;i<BRACKETS.length;i++){
+      const lo=BRACKETS[i].from, hi=UPPER[i];
+      const inBracket=Math.max(0,Math.min(gross,hi)-lo);
+      if(inBracket<=0) continue;
+      const pct=(inBracket/gross)*100;
+      const bar=document.createElement('div');
+      bar.className='seg-bar';
+      bar.style.width=pct+'%';
+      bar.style.background=COLORS[i];
+      bar.title=labels[i]+' kerf: '+fmt(inBracket);
+      stack.appendChild(bar);
+
+      const leg=document.createElement('div');
+      leg.className='leg';
+      leg.innerHTML='<span class="sw" style="background:'+COLORS[i]+'"></span>'+labels[i]+' kerf · <b>'+fmt(inBracket)+'</b>';
+      legend.appendChild(leg);
+    }
+  }
+
+  // events
+  $('period-seg').addEventListener('click',e=>{
+    const btn=e.target.closest('button'); if(!btn)return;
+    period=btn.dataset.period;
+    [...$('period-seg').children].forEach(b=>b.classList.toggle('active',b===btn));
+    $('salary').placeholder = period==='month' ? '35 000' : '420 000';
+    calc();
+  });
+  ['salary','age','medical','uif'].forEach(id=>{
+    $(id).addEventListener('input',calc);
+    $(id).addEventListener('change',calc);
+  });
+
+  calc();
+})();
+</script>
+</body>
+</html>
