@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Belasting Sakrekenaar 2026/2027 | Bereken jou netto salaris ná SARS-belasting</title>
+<title>Belasting Sakrekenaar 2026/2027 | Netto Salaris Ná Belasting Bereken</title>
 <meta name="description" content="Bereken vinnig jou maandelikse netto salaris ná SARS-inkomstebelasting vir die 2026/2027 belastingjaar. Gratis Afrikaanse belasting sakrekenaar met die nuutste belastingkerwe, kortings en UIF.">
 <style>
   :root{
@@ -197,6 +197,55 @@
     <div class="legend" id="legend"></div>
   </div>
 
+  <h2 class="sectit" id="bonus">Bonus sakrekenaar (13de tjek)</h2>
+  <p class="sub" style="margin-bottom:4px">Kry jy 'n bonus of 13de tjek? Sien hoeveel belasting afgetrek word en wat netto in jou sak beland. 'n Bonus word by jou jaarinkomste getel en teen jou marginale koers belas — nie teen 'n vaste straf-koers nie.</p>
+
+  <div class="card">
+    <div class="row">
+      <div class="field">
+        <label for="bMonthly">Bruto maandsalaris</label>
+        <div class="input-money">
+          <span>R</span>
+          <input type="number" id="bMonthly" placeholder="35 000" min="0" step="100" inputmode="numeric">
+        </div>
+      </div>
+      <div class="field">
+        <label for="bBonus">Bonus bedrag <span class="hint">(eenmalig)</span></label>
+        <div class="input-money">
+          <span>R</span>
+          <input type="number" id="bBonus" placeholder="20 000" min="0" step="100" inputmode="numeric">
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="bAge">Ouderdom</label>
+      <select id="bAge">
+        <option value="under65">Jonger as 65</option>
+        <option value="65to74">65 tot 74</option>
+        <option value="75plus">75 en ouer</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="result" id="bResult" aria-live="polite">
+    <div class="lbl">Netto bonus in jou sak</div>
+    <div class="bignum" id="bNet">R0</div>
+    <div class="perlbl" id="bRate">Effektiewe belasting op bonus: 0%</div>
+    <div class="breakdown">
+      <div class="brow"><span>Bruto bonus</span><span class="v" id="bGross">R0</span></div>
+      <div class="brow"><span>Belasting op bonus</span><span class="v" id="bTax">−R0</span></div>
+      <div class="brow total"><span>Netto bonus</span><span class="v" id="bNetRow">R0</span></div>
+    </div>
+  </div>
+
+  <h2 class="sectit">Hoe werk LBS / PAYE in Suid-Afrika?</h2>
+  <div class="card" style="font-size:.96rem;color:var(--ink-soft)">
+    <p style="margin-bottom:12px"><strong style="color:var(--ink)">LBS (Lopende Betaalstelsel)</strong>, in Engels <em>PAYE (Pay-As-You-Earn)</em>, is die stelsel waarmee jou werkgewer elke maand belasting van jou salaris aftrek en direk aan SARS oorbetaal. Jy sien dus nooit daardie geld nie — dit gaan klaar weg voor jou salaris uitbetaal word.</p>
+    <p style="margin-bottom:12px"><strong style="color:var(--ink)">Hoe word dit bereken?</strong> Jou werkgewer neem jou maandsalaris, vermenigvuldig dit met 12 om jou geskatte jaarinkomste te kry, bereken die jaarlikse belasting volgens die SARS-kerwe, trek jou kortings af, en deel dan weer deur 12. Dít is jou maandelikse LBS-aftrekking.</p>
+    <p style="margin-bottom:12px"><strong style="color:var(--ink)">Waarom is my bonus so swaar belas?</strong> 'n Algemene wanopvatting is dat bonusse teen 'n spesiale hoë koers belas word. Dit is nie waar nie. Jou bonus word bo-op jou gewone inkomste getel, en omdat dit jou in 'n hoër belastingkerf instoot, word dit teen jou <em>marginale</em> koers belas. Dit vóél soos meer, maar dis dieselfde progressiewe stelsel.</p>
+    <p style="margin-bottom:0"><strong style="color:var(--ink)">Wat is die verskil tussen LBS en jou belastingopgawe?</strong> LBS is 'n maandelikse <em>vooruitbetaling</em>. Wanneer jy jou jaarlikse opgawe (ITR12) by SARS indien, word alles verreken — as te veel afgetrek is, kry jy 'n terugbetaling; as te min, betaal jy by.</p>
+  </div>
+
   <h2 class="sectit">Veelgevraagde vrae</h2>
 
   <details class="faq"><summary>Hoe werk progressiewe belasting?</summary>
@@ -337,6 +386,32 @@
     $(id).addEventListener('input',calc);
     $(id).addEventListener('change',calc);
   });
+
+  // ---- Bonus calculator (reuses annualTax + REBATES) ----
+  function calcBonus(){
+    const monthly=parseFloat($('bMonthly').value)||0;
+    const bonus=parseFloat($('bBonus').value)||0;
+    const age=$('bAge').value;
+    const rebate=REBATES[age];
+
+    const annualBase=monthly*12;
+    const taxWithout=Math.max(0,annualTax(annualBase)-rebate);
+    const taxWith=Math.max(0,annualTax(annualBase+bonus)-rebate);
+    const bonusTax=Math.max(0,taxWith-taxWithout);
+    const netBonus=bonus-bonusTax;
+    const effRate= bonus>0 ? (bonusTax/bonus*100) : 0;
+
+    $('bNet').textContent=fmt(netBonus);
+    $('bRate').textContent='Effektiewe belasting op bonus: '+effRate.toFixed(1)+'%';
+    $('bGross').textContent=fmt(bonus);
+    $('bTax').textContent='−'+fmt(bonusTax);
+    $('bNetRow').textContent=fmt(netBonus);
+  }
+  ['bMonthly','bBonus','bAge'].forEach(id=>{
+    $(id).addEventListener('input',calcBonus);
+    $(id).addEventListener('change',calcBonus);
+  });
+  calcBonus();
 
   calc();
 })();
