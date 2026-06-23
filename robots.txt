@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://eggnoodlethefirst.github.io/belasting-sakrekenaar/sitemap.xml
+Sitemap: https://belasting-sakrekenaar.pages.dev/sitemap.xml
