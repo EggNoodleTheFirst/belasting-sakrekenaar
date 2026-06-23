@@ -28,7 +28,11 @@
     line-height:1.55;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:760px;margin:0 auto;padding:24px 20px 80px}
+  .wrap{max-width:760px;margin:0 auto;padding:8px 20px 80px}
+  .sg-nav{max-width:760px;margin:0 auto;padding:18px 20px;display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;border-bottom:1px solid var(--line)}
+  .sg-nav .brand{font-family:Georgia,serif;font-weight:700;font-size:1.15rem;color:var(--ink);text-decoration:none;margin-right:auto}
+  .sg-nav a{color:var(--ink-soft);text-decoration:none;font-size:.9rem;font-weight:600}
+  .sg-nav a:hover{color:var(--gold)}
   header.hero{padding:18px 0 8px}
   .eyebrow{
     font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
@@ -123,6 +127,13 @@
 </style>
 </head>
 <body>
+<nav class="sg-nav">
+  <a href="index.html" class="brand">SlimGeld</a>
+  <a href="index.html">Sakrekenaar</a>
+  <a href="belastingkerwe.html">Belastingkerwe</a>
+  <a href="oor-ons.html">Oor Ons</a>
+  <a href="kontak.html">Kontak</a>
+</nav>
 <div class="wrap">
   <header class="hero">
     <div class="eyebrow">Belastingjaar 2026 / 2027 · Suid-Afrika</div>
@@ -266,6 +277,12 @@
   </div>
 
   <footer>
+    <p style="margin-bottom:10px">
+      <a href="belastingkerwe.html" style="color:var(--gold);font-weight:600;text-decoration:none">Belastingkerwe</a> ·
+      <a href="oor-ons.html" style="color:var(--gold);font-weight:600;text-decoration:none">Oor Ons</a> ·
+      <a href="kontak.html" style="color:var(--gold);font-weight:600;text-decoration:none">Kontak</a> ·
+      <a href="privaatheidsbeleid.html" style="color:var(--gold);font-weight:600;text-decoration:none">Privaatheidsbeleid</a>
+    </p>
     Belastingkerwe en kortings: Nasionale Tesourie Begroting 2026 Belastinggids.<br>
     Laas opgedateer Junie 2026 · Gemaak vir Suid-Afrikaners.
   </footer>
